@@ -11,4 +11,5 @@ public interface IProductService {
     ProductOutputDTO findById(Long id);
     void delete(Long id);
     List<ProductOutputDTO> findAll();
+    void checkDuplicity(String name);
 }
