@@ -40,10 +40,18 @@ public class ProductResource extends ProductServiceGrpc.ProductServiceImplBase {
         responseObserver.onCompleted();
     }
 
-//    @Override
-//    public void findById(RequestById request, StreamObserver<ProductResponse> responseObserver) {
-//        ProductOutputDTO inputDto = new ProductOutputDTO(
-//                request.getId()
-//        );
-//    }
+    @Override
+    public void findById(RequestById request, StreamObserver<ProductResponse> responseObserver) {
+        ProductOutputDTO outputDTO = productService.findById(request.getId());
+
+        ProductResponse response = ProductResponse.newBuilder()
+                .setId(outputDTO.getId())
+                .setName(outputDTO.getName())
+                .setPrice(outputDTO.getPrice())
+                .setQuantityInStock(outputDTO.getQuantityInStock())
+                .build();
+
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+    }
 }

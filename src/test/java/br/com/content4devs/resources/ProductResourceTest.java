@@ -3,6 +3,7 @@ package br.com.content4devs.resources;
 import br.com.content4devs.ProductRequest;
 import br.com.content4devs.ProductResponse;
 import br.com.content4devs.ProductServiceGrpc;
+import br.com.content4devs.RequestById;
 import br.com.content4devs.domain.Product;
 import io.grpc.StatusException;
 import io.grpc.StatusRuntimeException;
@@ -59,5 +60,26 @@ class ProductResourceTest {
         Assertions.assertThatExceptionOfType(StatusRuntimeException.class)
                 .isThrownBy(() -> serviceBlockingStub.create(productRequest))
                 .withMessage("ALREADY_EXISTS: Produto Product A já cadastrado no sistema.");
+    }
+
+    @Test
+    void findByIdProductSucessTest() {
+        RequestById request = RequestById.newBuilder()
+                .setId(1L)
+                .build();
+
+        ProductResponse productResponse = serviceBlockingStub.findById(request);
+        Assertions.assertThat(productResponse.getId()).isEqualTo(request.getId());
+    }
+
+    @Test
+    void findByIdProductNotFoundExceptionTest() {
+        RequestById request = RequestById.newBuilder()
+                .setId(4L)
+                .build();
+
+        Assertions.assertThatExceptionOfType(StatusRuntimeException.class)
+                .isThrownBy(() -> serviceBlockingStub.findById(request))
+                .withMessage("NOT_FOUND: Produto com ID 4 não encontrado.");
     }
 }
