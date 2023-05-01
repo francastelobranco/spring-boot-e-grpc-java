@@ -7,6 +7,7 @@ import br.com.content4devs.repository.ProductRepository;
 import br.com.content4devs.resources.dto.ProductInputDTO;
 import br.com.content4devs.resources.dto.ProductOutputDTO;
 import org.assertj.core.api.Assertions;
+import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -98,6 +100,21 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void findAll() {
+    void findAllSucessTest() {
+        List<Product> products = List.of(
+                new Product(1L, "product name A", 10.0, 10),
+                new Product(2L, "product name B", 10.0, 10)
+        );
+
+        Mockito.when(productRepository.findAll()).thenReturn(products);
+
+        List<ProductOutputDTO> outputDTOs = productService.findAll();
+
+        Assertions.assertThat(outputDTOs)
+                .extracting("id", "name", "price", "quantityInStock")
+                .contains(
+                        Tuple.tuple(1L, "product name A", 10.0, 10),
+                        Tuple.tuple(2L, "product name B", 10.0, 10)
+                );
     }
 }

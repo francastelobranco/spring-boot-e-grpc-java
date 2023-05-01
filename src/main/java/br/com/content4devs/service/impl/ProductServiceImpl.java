@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements IProductService {
@@ -46,7 +47,10 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public List<ProductOutputDTO> findAll() {
-        return null;
+        var product = this.productRepository.findAll();
+        return product.stream()
+                .map(ProductConverterUtil :: produtctToProductOutputDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
