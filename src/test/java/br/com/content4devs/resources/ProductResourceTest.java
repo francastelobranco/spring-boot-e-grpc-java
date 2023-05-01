@@ -1,15 +1,13 @@
 package br.com.content4devs.resources;
 
-import br.com.content4devs.ProductRequest;
-import br.com.content4devs.ProductResponse;
-import br.com.content4devs.ProductServiceGrpc;
-import br.com.content4devs.RequestById;
+import br.com.content4devs.*;
 import br.com.content4devs.domain.Product;
 import br.com.content4devs.exception.ProductNotFoundException;
 import io.grpc.StatusException;
 import io.grpc.StatusRuntimeException;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.assertj.core.api.Assertions;
+import org.assertj.core.groups.Tuple;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -102,5 +100,23 @@ class ProductResourceTest {
         Assertions.assertThatExceptionOfType(StatusRuntimeException.class)
                 .isThrownBy(() -> serviceBlockingStub.delete(request))
                 .withMessage("NOT_FOUND: Produto com ID 4 não encontrado.");
+    }
+
+    @Test
+    void findAllProductSucessTest() {
+        EmptyRequest request = EmptyRequest.newBuilder().build();
+
+        ProductResponseList responseList = serviceBlockingStub.findAll(request);
+
+        Assertions.assertThat(responseList).isInstanceOf(ProductResponseList.class);
+
+        Assertions.assertThat(responseList.getProductsCount()).isEqualTo(2);
+
+        Assertions.assertThat(responseList.getProductsList())
+                .extracting("id", "name", "price", "quantityInStock")
+                .contains(
+                        Tuple.tuple(1L,"Product A", 10.99, 10),
+                        Tuple.tuple(2L, "Product B", 10.99, 10)
+                );
     }
 }
