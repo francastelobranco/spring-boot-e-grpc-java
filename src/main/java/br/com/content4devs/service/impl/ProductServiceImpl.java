@@ -2,6 +2,7 @@ package br.com.content4devs.service.impl;
 
 import br.com.content4devs.domain.Product;
 import br.com.content4devs.exception.ProductAlreadyExistsException;
+import br.com.content4devs.exception.ProductNotFoundException;
 import br.com.content4devs.resources.dto.ProductInputDTO;
 import br.com.content4devs.resources.dto.ProductOutputDTO;
 import br.com.content4devs.repository.ProductRepository;
@@ -10,6 +11,7 @@ import br.com.content4devs.util.ProductConverterUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductServiceImpl implements IProductService {
@@ -32,7 +34,8 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public ProductOutputDTO findById(Long id) {
-        return null;
+        var product = this.productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
+        return ProductConverterUtil.produtctToProductOutputDTO(product);
     }
 
     @Override

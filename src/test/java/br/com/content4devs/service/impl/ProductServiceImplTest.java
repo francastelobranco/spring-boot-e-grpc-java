@@ -2,6 +2,7 @@ package br.com.content4devs.service.impl;
 
 import br.com.content4devs.domain.Product;
 import br.com.content4devs.exception.ProductAlreadyExistsException;
+import br.com.content4devs.exception.ProductNotFoundException;
 import br.com.content4devs.repository.ProductRepository;
 import br.com.content4devs.resources.dto.ProductInputDTO;
 import br.com.content4devs.resources.dto.ProductOutputDTO;
@@ -53,7 +54,27 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void findById() {
+    void findByIdSucessTest() {
+        Long id = 1L;
+        Product product = new Product(1L, "product name", 10.0, 10);
+
+        Mockito.when(productRepository.findById(Mockito.any())).thenReturn(Optional.of(product));
+
+        ProductOutputDTO outputDTO = productService.findById(id);
+
+        Assertions.assertThat(outputDTO)
+                .usingRecursiveComparison()
+                .isEqualTo(product);
+    }
+
+    @Test
+    public void findByIdProductExceptionTest() {
+        Long id = 1L;
+
+        Mockito.when(productRepository.findById(Mockito.any())).thenReturn(Optional.empty());
+
+        Assertions.assertThatExceptionOfType(ProductNotFoundException.class)
+                .isThrownBy(() -> productService.findById(id));
     }
 
     @Test

@@ -3,6 +3,7 @@ package br.com.content4devs.resources;
 import br.com.content4devs.ProductRequest;
 import br.com.content4devs.ProductResponse;
 import br.com.content4devs.ProductServiceGrpc;
+import br.com.content4devs.domain.Product;
 import io.grpc.StatusException;
 import io.grpc.StatusRuntimeException;
 import net.devh.boot.grpc.client.inject.GrpcClient;
