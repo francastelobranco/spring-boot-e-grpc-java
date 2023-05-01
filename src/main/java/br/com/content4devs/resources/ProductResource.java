@@ -54,4 +54,10 @@ public class ProductResource extends ProductServiceGrpc.ProductServiceImplBase {
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }
+
+    @Override
+    public void delete(RequestById request, StreamObserver<ProductResponse> responseObserver) {
+        productService.delete(request.getId());
+        responseObserver.onCompleted();
+    }
 }

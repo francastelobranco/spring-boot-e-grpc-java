@@ -78,7 +78,23 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void delete() {
+    void deleteSucessTest() {
+        Long id = 1L;
+        Product product = new Product(1L, "product name", 10.0, 10);
+
+        Mockito.when(productRepository.findById(Mockito.any())).thenReturn(Optional.of(product));
+
+        Assertions.assertThatNoException().isThrownBy(() -> productService.findById(id));
+    }
+
+    @Test
+    void deleteIdProductExceptionTest() {
+        Long id = 1L;
+
+        Mockito.when(productRepository.findById(Mockito.any())).thenReturn(Optional.empty());
+
+        Assertions.assertThatExceptionOfType(ProductNotFoundException.class)
+                .isThrownBy(() -> productService.delete(id));
     }
 
     @Test
