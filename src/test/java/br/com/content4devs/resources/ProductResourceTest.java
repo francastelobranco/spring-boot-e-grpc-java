@@ -5,6 +5,7 @@ import br.com.content4devs.ProductResponse;
 import br.com.content4devs.ProductServiceGrpc;
 import br.com.content4devs.RequestById;
 import br.com.content4devs.domain.Product;
+import br.com.content4devs.exception.ProductNotFoundException;
 import io.grpc.StatusException;
 import io.grpc.StatusRuntimeException;
 import net.devh.boot.grpc.client.inject.GrpcClient;
@@ -80,6 +81,26 @@ class ProductResourceTest {
 
         Assertions.assertThatExceptionOfType(StatusRuntimeException.class)
                 .isThrownBy(() -> serviceBlockingStub.findById(request))
+                .withMessage("NOT_FOUND: Produto com ID 4 não encontrado.");
+    }
+
+    @Test
+    void deleteProductIdProductSucessTest() {
+        RequestById request = RequestById.newBuilder()
+                .setId(1L)
+                .build();
+
+        Assertions.assertThatNoException().isThrownBy(() -> serviceBlockingStub.delete(request));
+    }
+
+    @Test
+    void deleteProductNotFoundExceptionTest() {
+        RequestById request = RequestById.newBuilder()
+                .setId(4L)
+                .build();
+
+        Assertions.assertThatExceptionOfType(StatusRuntimeException.class)
+                .isThrownBy(() -> serviceBlockingStub.delete(request))
                 .withMessage("NOT_FOUND: Produto com ID 4 não encontrado.");
     }
 }
